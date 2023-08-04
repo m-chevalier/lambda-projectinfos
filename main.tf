@@ -9,7 +9,6 @@ terraform {
 // Archive
 provider "archive" {}
 
-
 // AWS :
 provider "aws" {
   region = "eu-west-1"
@@ -52,18 +51,4 @@ resource "aws_lambda_function" "project_infos" {
   role    = aws_iam_role.projectinfo_lambda_iam.arn
   handler = "projectinfos.lambda_handler"
   runtime = "python3.9"
-}
-
-resource "aws_lambda_function_url" "url" {
-  function_name      = aws_lambda_function.project_infos.function_name
-  authorization_type = "NONE"
-
-  cors {
-    allow_credentials = true
-    allow_origins     = ["*"]
-    allow_methods     = ["*"]
-    allow_headers     = ["date", "keep-alive"]
-    expose_headers    = ["keep-alive", "date"]
-    max_age           = 86400
-  }
 }
