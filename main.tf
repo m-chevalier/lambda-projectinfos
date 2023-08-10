@@ -26,7 +26,7 @@ data "archive_file" "projectinfos_zip_file" {
   output_path = "projectinfos.zip"
 }
 
-// - Policy
+// - Policy document for the lambda
 data "aws_iam_policy_document" "projectinfo_lambda_policy" {
   statement {
     effect = "Allow"
@@ -38,14 +38,15 @@ data "aws_iam_policy_document" "projectinfo_lambda_policy" {
   }
 }
 
+// role of the lambda
 resource "aws_iam_role" "projectinfo_lambda_iam" {
   name                  = "limited-projectinfo_lambda_iam"
-  //permissions_boundary  = "arn:aws:iam::135225040694:policy/SysopsPermissionsBoundary" 
   assume_role_policy    = data.aws_iam_policy_document.projectinfo_lambda_policy.json
 }
 
 data "aws_organizations_organization" "org" {}
 
+// - Permissions for the lambda
 resource "aws_lambda_permission" "allow_organization_invoke" {
   statement_id = "AllowOrganizationInvoke"
   action = "lambda:InvokeFunction"
