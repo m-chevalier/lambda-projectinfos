@@ -20,10 +20,10 @@ provider "aws" {
   }
 }
 
-data "archive_file" "projectinfos_zip_file" {
+data "archive_file" "code" {
   type        = "zip"
-  source_file = "projectinfos.py"
-  output_path = "projectinfos.zip"
+  source_dir  = "${path.module}/code"
+  output_path = "${path.module}/projectinfos.zip"
 }
 
 // - Policy document for the lambda
@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "projectinfo_lambda_policy" {
 
 // role of the lambda
 resource "aws_iam_role" "projectinfo_lambda_iam" {
-  name                  = "limited-projectinfo_lambda_iam"
+  name                  = "projectinfo_lambda_iam"
   assume_role_policy    = data.aws_iam_policy_document.projectinfo_lambda_policy.json
 }
 
@@ -58,7 +58,8 @@ resource "aws_lambda_permission" "allow_organization_invoke" {
 // - Lambda
 resource "aws_lambda_function" "project_infos" {
   function_name = var.function_name
-  filename      = data.archive_file.projectinfos_zip_file.output_path
+  filename         = data.archive_file.code.output_path
+  source_code_hash = data.archive_file.code.output_base64sha256
   role    = aws_iam_role.projectinfo_lambda_iam.arn
   handler = "projectinfos.lambda_handler"
   runtime = "python3.9"
