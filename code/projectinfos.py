@@ -1,5 +1,4 @@
 import json
-import base64
 import urllib3
 
 http = urllib3.PoolManager()
@@ -7,17 +6,22 @@ http = urllib3.PoolManager()
 url = "https://catfact.ninja/fact"
 params = {}
 
+def unknown_project():
+    return {"status": "unknown-project-id", "message": "This project ID doesn't exist"}
+
+def invalid_input_parameters():
+    return {"status":"json-error", "message": "Invalid JSON data in the request body."}
+
+
 def lambda_handler(event, context):
-    # Parse the incoming event body
     try:
-        #Checking if all input parameters are set :
+        # Checking if all input parameters are set :
         project_id = event["projectId"]
     except Exception as e:
-        return {"Status":"error", "error": "Invalid JSON data in the request body."}
+        return invalid_input_parameters()
 
-    if project_id == "test-erreur":
-        # If the project id doesn't exist we send an error value (remove in production mode)
-        return {"Status": "unknown-project-id"}
+    if project_id == "test-erreur": # If the project id doesn't exist we send an error value (remove in production mode)
+        return unknown_project()
 
 
     # Make a request to Workday API here
@@ -28,9 +32,10 @@ def lambda_handler(event, context):
 
 
     response = {
-        "Fact": data["fact"], # We can add every parameter we want in this object
-        "Status" : "success",
-        "ProjectName": "Test d'ajout de tag depuis une requête",
+        "status" : "success",
+        "message" : "success",
+        "projectName": "Name of the project using Workday API",
+        "owner": "Owner email using Workday API",
     }
 
     return response

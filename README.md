@@ -15,7 +15,7 @@ The lambda returns JSON data formatted like :
 
 ```json
 {
-    "TestTag": "TestValue",
-    "Status" : "success",
-    "ProjectName": "Name of the project",
+    "owner": "Owner email",
+    "status" : "success",
+    "projectName": "Name of the project",
 }```
