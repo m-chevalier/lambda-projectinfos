@@ -17,5 +17,9 @@ The lambda returns JSON data formatted like :
 {
     "owner": "Owner email",
     "status" : "success",
-    "projectName": "Name of the project",
+    "message" : "success"
 }```
+
+# Permissions
+
+This lambda has a aws_lambda_permission that allows the whole organization to call it. However, this could not be tested, as we only have access to one account.
