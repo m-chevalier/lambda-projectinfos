@@ -34,7 +34,6 @@ def lambda_handler(event, context):
     response = {
         "status" : "success",
         "message" : "success",
-        "projectName": "Name of the project using Workday API",
         "owner": "Owner email using Workday API",
     }
 
