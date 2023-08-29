@@ -1,10 +1,32 @@
 # lambda-projectinfos
 
-This lambda is used by the Terraform module `terraform-module-tagging`
+Ce repo contient le script de déploiement de la lambda permettant de faire le lien entre Workday et le module Terraform de tagging.
 
-Its objective is to contact the Workday API to get any information related to a project and return them to the module in order to set tags on a resource
+## Déploiement
 
-The module send JSON data formatted like :
+### Variables
+
+Les variables suivantes sont sont présentes et modifiables dans le fichier [variables.tf](variables.tf) :
+
+- region
+- function_name
+
+### Backend
+
+Modifier le fichier [backend.tf](backend.tf) pour paramétrer le stockage du `.tfstate`. (voir : [DOC TERRAFORM](https://developer.hashicorp.com/terraform/language/settings/backends/configuration))
+
+### Appliquer
+
+Une fois les changements réalisés :
+
+- initialiser terraform `terraform init`
+- déployer l'infrastructure `terraform apply`
+
+Pour détruire l'infrastructure : `terraform destroy`
+
+## Fonctionnement
+
+La lambda reçoit des données JSON sous ce format :
 
 ```json
 {
@@ -12,7 +34,7 @@ The module send JSON data formatted like :
 }
 ```
 
-The lambda returns JSON data formatted like :
+La lambda retourne des données JSON sous ce format :
 
 ```json
 {
@@ -22,6 +44,14 @@ The lambda returns JSON data formatted like :
 }
 ```
 
+Si le `status` n'est pas à la valeur `success`, le module produira une erreur et affichera la valeur du `message` à l'utilisateur.
+
 ## Permissions
 
-This lambda has a aws_lambda_permission that allows the whole organization to call it. However, this could not be tested, as we only have access to one account.
+Cette lambda a une ressource "aws_lambda_permission" pour autoriser tout l'organisation à l'appeler.
+
+## Développement
+
+Pour modifier l'excution de la lambda, il suffit de modifier le fichier [projectinfos.py](code/projectinfos.py) et d'appliquer l'infrastructure.
+
+Pour l'instant, cette lambda ne réalise aucun appel HTTP, le code commenté sera à réaliser pour la liaison avec Workday

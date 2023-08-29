@@ -6,12 +6,10 @@ terraform {
   }
 }
 
-// Archive
 provider "archive" {}
 
-// AWS :
 provider "aws" {
-  region = "eu-west-1"
+  region = var.region
   default_tags {
     tags = {
       Production = "False"

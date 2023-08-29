@@ -3,8 +3,6 @@ import urllib3
 
 http = urllib3.PoolManager()
 
-url = "https://catfact.ninja/fact"
-params = {}
 
 def unknown_project():
     return {"status": "unknown-project-id", "message": "This project ID doesn't exist"}
@@ -20,21 +18,18 @@ def lambda_handler(event, context):
     except Exception as e:
         return invalid_input_parameters()
 
-    if project_id == "test-erreur": # If the project id doesn't exist we send an error value (remove in production mode)
-        return unknown_project()
 
-
-    # Make a request to Workday API here
-    result = http.request('GET',
-                        url=url,
-                        body=json.dumps(params))
-    data = json.loads(result.data)
+    # Uncomment here and make a request to Workday API
+    #result = http.request('GET',
+    #                    url="http://example.com",
+    #                    body=json.dumps({}))
+    #data = json.loads(result.data)
 
 
     response = {
         "status" : "success",
         "message" : "success",
-        "owner": "Owner email using Workday API",
+        "owner": "fake-owner-email-from-workday",
     }
 
     return response
